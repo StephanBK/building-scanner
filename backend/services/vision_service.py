@@ -57,10 +57,19 @@ Guidelines:
 - For misc buildings, still estimate WWR if possible, or use 0 if not applicable"""
 
     def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or os.getenv("OPENAI_API_KEY")
-        if not self.api_key:
-            logger.warning("OpenAI API key not configured")
-        self.client = AsyncOpenAI(api_key=self.api_key) if self.api_key else None
+        self._api_key = api_key
+        self._client = None
+
+    @property
+    def client(self):
+        """Lazily initialize the OpenAI client."""
+        if self._client is None:
+            api_key = self._api_key or os.getenv("OPENAI_API_KEY")
+            if not api_key:
+                logger.warning("OpenAI API key not configured")
+                return None
+            self._client = AsyncOpenAI(api_key=api_key)
+        return self._client
 
     def _encode_image(self, image_path: str) -> str:
         """Encode an image file to base64."""

@@ -40,8 +40,17 @@ Rules:
 Respond ONLY with valid JSON. No markdown, no explanation outside the JSON."""
 
     def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or os.getenv("OPENAI_API_KEY")
-        self.client = AsyncOpenAI(api_key=self.api_key) if self.api_key else None
+        self._api_key = api_key
+        self._client = None
+
+    @property
+    def client(self):
+        """Lazily initialize the OpenAI client."""
+        if self._client is None:
+            api_key = self._api_key or os.getenv("OPENAI_API_KEY")
+            if api_key:
+                self._client = AsyncOpenAI(api_key=api_key)
+        return self._client
 
     async def parse_csv(self, csv_content: str) -> Dict:
         """
