@@ -40,8 +40,16 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Directories
-BASE_DIR = Path(__file__).parent.parent
+# Directories - handle both local dev and Docker
+BACKEND_DIR = Path(__file__).parent
+# Check if we're in Docker (frontend/dist is sibling) or local dev (frontend/dist is in parent)
+if (BACKEND_DIR / "frontend" / "dist").exists():
+    # Docker: backend files are in /app, frontend/dist is at /app/frontend/dist
+    BASE_DIR = BACKEND_DIR
+else:
+    # Local dev: backend is in /project/backend, frontend is in /project/frontend
+    BASE_DIR = BACKEND_DIR.parent
+
 OUTPUT_DIR = BASE_DIR / "output"
 FRONTEND_DIR = BASE_DIR / "frontend" / "dist"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
