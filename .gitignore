@@ -1,0 +1,36 @@
+# Environment variables (API keys)
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+
+# Node/React
+node_modules/
+build/
+dist/
+.next/
+
+# Output data
+output/
+*.csv
+!sample_input.csv
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
