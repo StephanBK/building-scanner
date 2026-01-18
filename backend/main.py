@@ -265,6 +265,39 @@ async def api_root():
     }
 
 
+@app.get("/api/health")
+async def health_check():
+    """Check if API keys are configured."""
+    import os
+
+    keys_status = {
+        "OPENAI_API_KEY": bool(os.getenv("OPENAI_API_KEY")),
+        "GOOGLE_MAPS_API_KEY": bool(os.getenv("GOOGLE_MAPS_API_KEY")),
+        "GOOGLE_SEARCH_API_KEY": bool(os.getenv("GOOGLE_SEARCH_API_KEY")),
+        "GOOGLE_SEARCH_ENGINE_ID": bool(os.getenv("GOOGLE_SEARCH_ENGINE_ID")),
+    }
+
+    # Show first/last 4 chars of each key for debugging (safe partial reveal)
+    keys_preview = {}
+    for key_name in keys_status:
+        val = os.getenv(key_name, "")
+        if val and len(val) > 8:
+            keys_preview[key_name] = f"{val[:4]}...{val[-4:]}"
+        elif val:
+            keys_preview[key_name] = "****"
+        else:
+            keys_preview[key_name] = "NOT SET"
+
+    all_configured = all(keys_status.values())
+
+    return {
+        "status": "healthy" if all_configured else "missing_keys",
+        "keys_configured": keys_status,
+        "keys_preview": keys_preview,
+        "message": "All API keys configured" if all_configured else "Some API keys are missing!"
+    }
+
+
 @app.get("/api/rate-limit")
 async def get_rate_limit(request: Request):
     """Check current rate limit status."""
