@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-// Use relative URL for production, full URL for development
 const API_BASE = import.meta.env.DEV ? 'http://localhost:8000/api' : '/api';
 
 const styles = {
@@ -13,42 +12,120 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '20px',
+    marginBottom: '24px',
     flexWrap: 'wrap',
+    gap: '16px',
+  },
+  titleGroup: {
+    display: 'flex',
+    alignItems: 'center',
     gap: '12px',
+  },
+  titleIcon: {
+    width: '40px',
+    height: '40px',
+    borderRadius: '10px',
+    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '20px',
+    boxShadow: '0 4px 14px rgba(16, 185, 129, 0.3)',
   },
   title: {
     fontSize: '24px',
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: '700',
+    color: '#1f2937',
+  },
+  subtitle: {
+    fontSize: '14px',
+    color: '#6b7280',
   },
   buttonGroup: {
     display: 'flex',
-    gap: '8px',
+    gap: '10px',
   },
   button: {
-    backgroundColor: '#2196F3',
-    color: 'white',
-    border: 'none',
-    padding: '10px 20px',
-    borderRadius: '4px',
-    fontSize: '14px',
-    cursor: 'pointer',
-    fontWeight: '500',
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
+    padding: '12px 20px',
+    borderRadius: '10px',
+    fontSize: '14px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    border: 'none',
+  },
+  buttonPrimary: {
+    background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
+    color: 'white',
+    boxShadow: '0 4px 14px rgba(59, 130, 246, 0.3)',
   },
   buttonSecondary: {
-    backgroundColor: '#fff',
-    color: '#333',
-    border: '1px solid #ccc',
+    background: 'white',
+    color: '#374151',
+    border: '1px solid #e5e7eb',
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+  },
+  buttonSuccess: {
+    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+    color: 'white',
+    boxShadow: '0 4px 14px rgba(16, 185, 129, 0.3)',
+  },
+  summary: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+    gap: '16px',
+    marginBottom: '24px',
+  },
+  summaryCard: {
+    background: 'white',
+    borderRadius: '12px',
+    padding: '20px',
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+    border: '1px solid #e5e7eb',
+    transition: 'all 0.2s',
+  },
+  summaryIcon: {
+    width: '36px',
+    height: '36px',
+    borderRadius: '8px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '18px',
+    marginBottom: '12px',
+  },
+  summaryLabel: {
+    fontSize: '13px',
+    color: '#6b7280',
+    marginBottom: '4px',
+  },
+  summaryValue: {
+    fontSize: '28px',
+    fontWeight: '700',
+    color: '#1f2937',
   },
   tableContainer: {
-    backgroundColor: '#fff',
-    borderRadius: '8px',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+    background: 'white',
+    borderRadius: '12px',
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+    border: '1px solid #e5e7eb',
     overflow: 'hidden',
+  },
+  tableHeader: {
+    padding: '16px 20px',
+    background: '#f9fafb',
+    borderBottom: '1px solid #e5e7eb',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  tableTitle: {
+    fontSize: '16px',
+    fontWeight: '600',
+    color: '#374151',
   },
   tableWrapper: {
     overflowX: 'auto',
@@ -59,98 +136,139 @@ const styles = {
     fontSize: '14px',
   },
   th: {
-    backgroundColor: '#f5f5f5',
-    padding: '12px 16px',
+    background: '#f9fafb',
+    padding: '14px 16px',
     textAlign: 'left',
     fontWeight: '600',
-    color: '#333',
-    borderBottom: '2px solid #e0e0e0',
+    color: '#374151',
+    borderBottom: '1px solid #e5e7eb',
     whiteSpace: 'nowrap',
+    fontSize: '13px',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px',
   },
   td: {
-    padding: '12px 16px',
-    borderBottom: '1px solid #e0e0e0',
+    padding: '16px',
+    borderBottom: '1px solid #f3f4f6',
     verticalAlign: 'top',
   },
-  badge: {
-    display: 'inline-block',
-    padding: '4px 8px',
-    borderRadius: '4px',
-    fontSize: '12px',
+  trHover: {
+    transition: 'background 0.2s',
+  },
+  addressCell: {
     fontWeight: '500',
+    color: '#1f2937',
+  },
+  addressZip: {
+    fontSize: '12px',
+    color: '#6b7280',
+    marginTop: '2px',
+  },
+  badge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '4px',
+    padding: '4px 10px',
+    borderRadius: '9999px',
+    fontSize: '12px',
+    fontWeight: '600',
   },
   badgeResidential: {
-    backgroundColor: '#e8f5e9',
-    color: '#2e7d32',
+    background: '#dcfce7',
+    color: '#166534',
   },
   badgeCommercialOffice: {
-    backgroundColor: '#e3f2fd',
-    color: '#1565c0',
+    background: '#dbeafe',
+    color: '#1e40af',
   },
   badgeCommercialHotel: {
-    backgroundColor: '#fff3e0',
-    color: '#e65100',
+    background: '#fef3c7',
+    color: '#92400e',
   },
   badgeCommercialMedical: {
-    backgroundColor: '#fce4ec',
-    color: '#c2185b',
+    background: '#fce7f3',
+    color: '#9d174d',
   },
   badgeCommercialRetail: {
-    backgroundColor: '#f3e5f5',
-    color: '#7b1fa2',
+    background: '#f3e8ff',
+    color: '#7c3aed',
   },
   badgeCommercialWarehouse: {
-    backgroundColor: '#efebe9',
-    color: '#5d4037',
+    background: '#e5e7eb',
+    color: '#374151',
   },
   badgeMixed: {
-    backgroundColor: '#e0f2f1',
-    color: '#00695c',
+    background: '#ccfbf1',
+    color: '#0f766e',
   },
   badgeMisc: {
-    backgroundColor: '#f5f5f5',
-    color: '#616161',
+    background: '#f3f4f6',
+    color: '#4b5563',
   },
-  confidenceHigh: {
-    color: '#2e7d32',
-  },
-  confidenceMedium: {
-    color: '#f57c00',
-  },
-  confidenceLow: {
-    color: '#d32f2f',
-  },
-  wwrBar: {
+  wwrContainer: {
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
+    gap: '10px',
   },
-  wwrBarBg: {
+  wwrBar: {
     width: '60px',
     height: '8px',
-    backgroundColor: '#e0e0e0',
-    borderRadius: '4px',
+    background: '#e5e7eb',
+    borderRadius: '9999px',
     overflow: 'hidden',
   },
-  wwrBarFill: {
+  wwrFill: {
     height: '100%',
-    backgroundColor: '#4caf50',
-    borderRadius: '4px',
+    background: 'linear-gradient(90deg, #10b981 0%, #059669 100%)',
+    borderRadius: '9999px',
+  },
+  wwrValue: {
+    fontWeight: '600',
+    color: '#1f2937',
+    minWidth: '36px',
+  },
+  confidenceHigh: {
+    color: '#059669',
+    fontWeight: '600',
+  },
+  confidenceMedium: {
+    color: '#d97706',
+    fontWeight: '600',
+  },
+  confidenceLow: {
+    color: '#dc2626',
+    fontWeight: '600',
   },
   reasoning: {
-    maxWidth: '300px',
-    fontSize: '12px',
-    color: '#666',
-    lineHeight: '1.4',
+    maxWidth: '280px',
+    fontSize: '13px',
+    color: '#6b7280',
+    lineHeight: '1.5',
   },
   imageButton: {
-    backgroundColor: 'transparent',
-    border: '1px solid #2196F3',
-    color: '#2196F3',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '4px',
+    padding: '6px 12px',
+    background: '#eff6ff',
+    border: '1px solid #bfdbfe',
+    borderRadius: '6px',
+    color: '#2563eb',
+    fontSize: '12px',
+    fontWeight: '500',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+  },
+  noImages: {
+    fontSize: '12px',
+    color: '#9ca3af',
+  },
+  error: {
+    color: '#dc2626',
+    fontSize: '12px',
+    background: '#fef2f2',
     padding: '4px 8px',
     borderRadius: '4px',
-    fontSize: '12px',
-    cursor: 'pointer',
   },
   modal: {
     position: 'fixed',
@@ -158,70 +276,72 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    background: 'rgba(0, 0, 0, 0.8)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 1000,
+    padding: '20px',
   },
   modalContent: {
-    backgroundColor: '#fff',
-    borderRadius: '8px',
-    padding: '20px',
-    maxWidth: '90vw',
+    background: 'white',
+    borderRadius: '16px',
+    padding: '24px',
+    maxWidth: '900px',
     maxHeight: '90vh',
     overflow: 'auto',
+    width: '100%',
   },
   modalHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '16px',
+    marginBottom: '20px',
+    paddingBottom: '16px',
+    borderBottom: '1px solid #e5e7eb',
+  },
+  modalTitle: {
+    fontSize: '18px',
+    fontWeight: '600',
+    color: '#1f2937',
   },
   modalClose: {
-    backgroundColor: 'transparent',
+    width: '36px',
+    height: '36px',
+    borderRadius: '8px',
+    background: '#f3f4f6',
     border: 'none',
-    fontSize: '24px',
+    fontSize: '20px',
     cursor: 'pointer',
-    color: '#666',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#6b7280',
+    transition: 'all 0.2s',
   },
   imageGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-    gap: '12px',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+    gap: '16px',
   },
   image: {
     width: '100%',
-    height: '250px',
+    height: '220px',
     objectFit: 'cover',
-    borderRadius: '4px',
+    borderRadius: '10px',
+    border: '1px solid #e5e7eb',
   },
-  error: {
-    color: '#d32f2f',
-    fontSize: '12px',
-  },
-  summary: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-    gap: '16px',
-    marginBottom: '24px',
-  },
-  summaryCard: {
-    backgroundColor: '#fff',
-    borderRadius: '8px',
-    padding: '20px',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-  },
-  summaryLabel: {
-    fontSize: '14px',
-    color: '#666',
-    marginBottom: '4px',
-  },
-  summaryValue: {
-    fontSize: '24px',
-    fontWeight: '600',
-    color: '#333',
-  },
+};
+
+const typeIcons = {
+  'residential': '🏠',
+  'commercial-office': '🏢',
+  'commercial-hotel': '🏨',
+  'commercial-medical': '🏥',
+  'commercial-retail': '🏪',
+  'commercial-warehouse': '🏭',
+  'mixed': '🏗️',
+  'misc': '🏛️',
 };
 
 export default function ResultsView({ results, jobId, onNewScan }) {
@@ -250,38 +370,26 @@ export default function ResultsView({ results, jobId, onNewScan }) {
   };
 
   const getBadgeStyle = (type) => {
-    switch (type) {
-      case 'residential':
-        return { ...styles.badge, ...styles.badgeResidential };
-      case 'commercial-office':
-        return { ...styles.badge, ...styles.badgeCommercialOffice };
-      case 'commercial-hotel':
-        return { ...styles.badge, ...styles.badgeCommercialHotel };
-      case 'commercial-medical':
-        return { ...styles.badge, ...styles.badgeCommercialMedical };
-      case 'commercial-retail':
-        return { ...styles.badge, ...styles.badgeCommercialRetail };
-      case 'commercial-warehouse':
-        return { ...styles.badge, ...styles.badgeCommercialWarehouse };
-      case 'mixed':
-        return { ...styles.badge, ...styles.badgeMixed };
-      default:
-        return { ...styles.badge, ...styles.badgeMisc };
-    }
+    const badgeStyles = {
+      'residential': styles.badgeResidential,
+      'commercial-office': styles.badgeCommercialOffice,
+      'commercial-hotel': styles.badgeCommercialHotel,
+      'commercial-medical': styles.badgeCommercialMedical,
+      'commercial-retail': styles.badgeCommercialRetail,
+      'commercial-warehouse': styles.badgeCommercialWarehouse,
+      'mixed': styles.badgeMixed,
+    };
+    return { ...styles.badge, ...(badgeStyles[type] || styles.badgeMisc) };
   };
 
   const getConfidenceStyle = (confidence) => {
     switch (confidence) {
-      case 'high':
-        return styles.confidenceHigh;
-      case 'medium':
-        return styles.confidenceMedium;
-      default:
-        return styles.confidenceLow;
+      case 'high': return styles.confidenceHigh;
+      case 'medium': return styles.confidenceMedium;
+      default: return styles.confidenceLow;
     }
   };
 
-  // Calculate summary stats
   const commercialTypes = ['commercial-office', 'commercial-hotel', 'commercial-medical', 'commercial-retail', 'commercial-warehouse'];
   const summary = {
     total: results.length,
@@ -299,55 +407,67 @@ export default function ResultsView({ results, jobId, onNewScan }) {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h2 style={styles.title}>Analysis Results</h2>
+        <div style={styles.titleGroup}>
+          <div style={styles.titleIcon}>✓</div>
+          <div>
+            <div style={styles.title}>Analysis Results</div>
+            <div style={styles.subtitle}>{results.length} buildings analyzed</div>
+          </div>
+        </div>
         <div style={styles.buttonGroup}>
           <button
             style={{ ...styles.button, ...styles.buttonSecondary }}
             onClick={onNewScan}
           >
-            New Scan
+            ← New Scan
           </button>
-          <button style={styles.button} onClick={handleDownloadCSV}>
-            📥 Download CSV
+          <button
+            style={{ ...styles.button, ...styles.buttonPrimary }}
+            onClick={handleDownloadCSV}
+          >
+            📄 CSV
           </button>
-          <button style={styles.button} onClick={handleDownloadZIP}>
-            📦 Download ZIP
+          <button
+            style={{ ...styles.button, ...styles.buttonSuccess }}
+            onClick={handleDownloadZIP}
+          >
+            📦 ZIP
           </button>
         </div>
       </div>
 
-      {/* Summary Cards */}
       <div style={styles.summary}>
         <div style={styles.summaryCard}>
+          <div style={{ ...styles.summaryIcon, background: '#dbeafe' }}>🏢</div>
           <div style={styles.summaryLabel}>Total Buildings</div>
           <div style={styles.summaryValue}>{summary.total}</div>
         </div>
         <div style={styles.summaryCard}>
+          <div style={{ ...styles.summaryIcon, background: '#dcfce7' }}>🏠</div>
           <div style={styles.summaryLabel}>Residential</div>
-          <div style={{ ...styles.summaryValue, color: '#2e7d32' }}>
-            {summary.residential}
-          </div>
+          <div style={{ ...styles.summaryValue, color: '#16a34a' }}>{summary.residential}</div>
         </div>
         <div style={styles.summaryCard}>
+          <div style={{ ...styles.summaryIcon, background: '#dbeafe' }}>🏢</div>
           <div style={styles.summaryLabel}>Commercial</div>
-          <div style={{ ...styles.summaryValue, color: '#1565c0' }}>
-            {summary.commercial}
-          </div>
+          <div style={{ ...styles.summaryValue, color: '#2563eb' }}>{summary.commercial}</div>
         </div>
         <div style={styles.summaryCard}>
-          <div style={styles.summaryLabel}>Mixed</div>
-          <div style={{ ...styles.summaryValue, color: '#00695c' }}>
-            {summary.mixed}
-          </div>
+          <div style={{ ...styles.summaryIcon, background: '#ccfbf1' }}>🏗️</div>
+          <div style={styles.summaryLabel}>Mixed Use</div>
+          <div style={{ ...styles.summaryValue, color: '#0d9488' }}>{summary.mixed}</div>
         </div>
         <div style={styles.summaryCard}>
+          <div style={{ ...styles.summaryIcon, background: '#fef3c7' }}>🪟</div>
           <div style={styles.summaryLabel}>Avg WWR</div>
           <div style={styles.summaryValue}>{summary.avgWWR}%</div>
         </div>
       </div>
 
-      {/* Results Table */}
       <div style={styles.tableContainer}>
+        <div style={styles.tableHeader}>
+          <span style={styles.tableTitle}>Building Details</span>
+        </div>
         <div style={styles.tableWrapper}>
           <table style={styles.table}>
             <thead>
@@ -363,13 +483,12 @@ export default function ResultsView({ results, jobId, onNewScan }) {
             </thead>
             <tbody>
               {results.map((result, index) => (
-                <tr key={index}>
+                <tr key={index} style={styles.trHover}>
                   <td style={styles.td}>
-                    {result.street_number} {result.street_name}
-                    <br />
-                    <span style={{ color: '#666', fontSize: '12px' }}>
-                      {result.zip_code}
-                    </span>
+                    <div style={styles.addressCell}>
+                      {result.street_number} {result.street_name}
+                    </div>
+                    <div style={styles.addressZip}>{result.zip_code}</div>
                   </td>
                   <td style={styles.td}>
                     {result.county && result.state
@@ -379,37 +498,29 @@ export default function ResultsView({ results, jobId, onNewScan }) {
                   <td style={styles.td}>
                     {result.building_type ? (
                       <span style={getBadgeStyle(result.building_type)}>
-                        {result.building_type}
+                        {typeIcons[result.building_type] || '🏛️'} {result.building_type}
                       </span>
-                    ) : (
-                      '-'
-                    )}
+                    ) : '-'}
                   </td>
                   <td style={styles.td}>
                     {result.wwr_estimate !== null && result.wwr_estimate !== undefined ? (
-                      <div style={styles.wwrBar}>
-                        <div style={styles.wwrBarBg}>
-                          <div
-                            style={{
-                              ...styles.wwrBarFill,
-                              width: `${result.wwr_estimate}%`,
-                            }}
-                          ></div>
+                      <div style={styles.wwrContainer}>
+                        <div style={styles.wwrBar}>
+                          <div style={{ ...styles.wwrFill, width: `${result.wwr_estimate}%` }}></div>
                         </div>
-                        <span>{result.wwr_estimate}%</span>
+                        <span style={styles.wwrValue}>{result.wwr_estimate}%</span>
                       </div>
-                    ) : (
-                      '-'
-                    )}
+                    ) : '-'}
                   </td>
                   <td style={styles.td}>
                     {result.confidence ? (
                       <span style={getConfidenceStyle(result.confidence)}>
+                        {result.confidence === 'high' && '● '}
+                        {result.confidence === 'medium' && '◐ '}
+                        {result.confidence === 'low' && '○ '}
                         {result.confidence}
                       </span>
-                    ) : (
-                      '-'
-                    )}
+                    ) : '-'}
                   </td>
                   <td style={styles.td}>
                     <div style={styles.reasoning}>
@@ -431,12 +542,10 @@ export default function ResultsView({ results, jobId, onNewScan }) {
                           )
                         }
                       >
-                        View
+                        🖼️ View
                       </button>
                     ) : (
-                      <span style={{ color: '#999', fontSize: '12px' }}>
-                        No images
-                      </span>
+                      <span style={styles.noImages}>No images</span>
                     )}
                   </td>
                 </tr>
@@ -446,19 +555,12 @@ export default function ResultsView({ results, jobId, onNewScan }) {
         </div>
       </div>
 
-      {/* Image Modal */}
       {selectedImages && (
         <div style={styles.modal} onClick={() => setSelectedImages(null)}>
-          <div
-            style={styles.modalContent}
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div style={styles.modalHeader}>
-              <h3>{selectedImages.address}</h3>
-              <button
-                style={styles.modalClose}
-                onClick={() => setSelectedImages(null)}
-              >
+              <h3 style={styles.modalTitle}>📍 {selectedImages.address}</h3>
+              <button style={styles.modalClose} onClick={() => setSelectedImages(null)}>
                 ✕
               </button>
             </div>
