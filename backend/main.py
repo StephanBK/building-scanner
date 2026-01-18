@@ -298,6 +298,51 @@ async def health_check():
     }
 
 
+@app.get("/api/test-apis")
+async def test_apis():
+    """Test each external API connection."""
+    results = {}
+
+    # Test Google Street View
+    try:
+        test_address = "350 5th Avenue, New York, NY 10118"
+        paths = await image_service.fetch_images(test_address, num_images=1)
+        results["google_streetview"] = {
+            "status": "ok" if paths else "no_images",
+            "message": f"Got {len(paths)} images" if paths else "No street view available"
+        }
+    except Exception as e:
+        results["google_streetview"] = {"status": "error", "message": str(e)}
+
+    # Test Google Custom Search
+    try:
+        search_results = await search_service.search_address("350 5th Avenue NYC")
+        results["google_search"] = {
+            "status": "ok" if search_results else "no_results",
+            "message": f"Got {len(search_results)} results"
+        }
+    except Exception as e:
+        results["google_search"] = {"status": "error", "message": str(e)}
+
+    # Test OpenAI (simple completion, not vision)
+    try:
+        from openai import AsyncOpenAI
+        client = AsyncOpenAI()
+        response = await client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": "Say 'API working' in 2 words"}],
+            max_tokens=10
+        )
+        results["openai"] = {
+            "status": "ok",
+            "message": response.choices[0].message.content
+        }
+    except Exception as e:
+        results["openai"] = {"status": "error", "message": str(e)}
+
+    return results
+
+
 @app.get("/api/rate-limit")
 async def get_rate_limit(request: Request):
     """Check current rate limit status."""
