@@ -326,8 +326,10 @@ async def test_apis():
 
     # Test OpenAI (simple completion, not vision)
     try:
+        import os
         from openai import AsyncOpenAI
-        client = AsyncOpenAI()
+        api_key = os.getenv("OPENAI_API_KEY")
+        client = AsyncOpenAI(api_key=api_key)
         response = await client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[{"role": "user", "content": "Say 'API working' in 2 words"}],
@@ -338,7 +340,13 @@ async def test_apis():
             "message": response.choices[0].message.content
         }
     except Exception as e:
-        results["openai"] = {"status": "error", "message": str(e)}
+        import traceback
+        results["openai"] = {
+            "status": "error",
+            "message": str(e),
+            "type": type(e).__name__,
+            "details": traceback.format_exc()[-500:]  # Last 500 chars of traceback
+        }
 
     return results
 
